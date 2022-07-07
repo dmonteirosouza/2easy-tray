@@ -1,0 +1,54 @@
+{
+  "name": "2easy",
+  "description": "Ponto eletrônico - 2easy",
+  "version": "1.0.0",
+  "main": "main.js",
+  "author": "Danilo Souza <dmonteiro.souza@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "postinstall": "install-app-deps",
+    "start": "electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
+  },
+  "dependencies": {
+    "axios": "^0.27.2",
+    "dotenv": "^16.0.1",
+    "qs": "^6.11.0"
+  },
+  "build": {
+    "appId": "2easy.tray.danilomonteiro.com.br",
+    "dmg": {
+      "contents": [
+        {
+          "x": 110,
+          "y": 150
+        },
+        {
+          "x": 240,
+          "y": 150,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ]
+    },
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "publisherName": "2easy",
+      "artifactName": "2easy",
+      "icon": "./build/icon.png"
+    }
+  },
+  "devDependencies": {
+    "electron": "^19.0.7",
+    "electron-builder": "^23.1.0"
+  }
+}

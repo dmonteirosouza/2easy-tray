@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8">
+    <title>Ponto 2easy</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+<div class="row gutters">
+	<div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
+		<div class="card h-100">
+			<div class="card-body">
+        <form>
+          <div class="row gutters">
+            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+              <h6 class="mb-3">Configurações</h6>
+            </div>
+            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+              <div class="form-group">
+                <label for="cpf">CPF</label>
+                <input type="text" class="form-control" id="cpf" name="cpf" placeholder="Informe o cpf" value="">
+              </div>
+            </div>
+            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+              <div class="form-group">
+                <label for="senha">Senha</label>
+                <input type="password" class="form-control" id="senha" name="senha" placeholder="Informe a senha" value="">
+              </div>
+            </div>
+            
+          </div>
+          <div class="row gutters">
+            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+              <div class="text-right">
+                <button type="submit" class="btn btn-secondary">Atualizar</button>
+              </div>
+            </div>
+          </div>
+        </form>
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+
+<style type="text/css">
+body {
+  margin-top:30px;
+}
+.account-settings .user-profile {
+    margin: 0 0 1rem 0;
+    padding-bottom: 1rem;
+    text-align: center;
+}
+.account-settings .user-profile .user-avatar {
+    margin: 0 0 1rem 0;
+}
+.account-settings .user-profile .user-avatar img {
+    width: 90px;
+    height: 90px;
+    -webkit-border-radius: 100px;
+    -moz-border-radius: 100px;
+    border-radius: 100px;
+}
+.account-settings .user-profile h5.user-name {
+    margin: 0 0 0.5rem 0;
+}
+.account-settings .user-profile h6.user-email {
+    margin: 0;
+    font-size: 0.8rem;
+    font-weight: 400;
+}
+.account-settings .about {
+    margin: 1rem 0 0 0;
+    font-size: 0.8rem;
+    text-align: center;
+}
+</style>
+
+<script type="text/javascript">
+  const electron = require('electron');
+  const { ipcRenderer } = electron;
+  require('dotenv').config();
+  
+  document.querySelector('form').addEventListener('submit', function (event) {
+    event.preventDefault();
+    
+    let data = {
+      cpf: document.querySelector('#cpf').value,
+      senha: document.querySelector('#senha').value
+    };
+
+    ipcRenderer.send('submit:config', data);
+  });
+
+  ipcRenderer.on('submit:config:success', function (event, data) {
+    alert('Configurações atualizadas com sucesso!');
+  });
+
+  setTimeout(() => {
+    ipcRenderer.on('config:store', function (event, data) {
+      document.querySelector('#cpf').value = data.cpf;
+      document.querySelector('#senha').value = data.senha;
+    });
+  }, 1000);
+</script>
+</body>
+</html>
