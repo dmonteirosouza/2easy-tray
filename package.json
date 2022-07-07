@@ -2,7 +2,7 @@
   "name": "2easy",
   "description": "Ponto eletrônico - 2easy",
   "version": "1.0.0",
-  "main": "main.js",
+  "main": "src/main.js",
   "author": "Danilo Souza <dmonteiro.souza@gmail.com>",
   "license": "MIT",
   "scripts": {

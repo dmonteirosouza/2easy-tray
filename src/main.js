@@ -3,7 +3,7 @@ const { app, Menu, Tray, Notification, nativeImage, BrowserWindow, ipcMain } = r
 const axios = require('axios');
 const qs = require('qs');
 require('dotenv').config();
-const Store = require('./store.js');
+const Store = require('./libs/store');
 
 app.setAppUserModelId('2easy');
 
@@ -27,18 +27,18 @@ ipcMain.on('submit:config', (event, data) => {
 });
 
 app.whenReady().then(() => {
-  const tray = new Tray(resolve(__dirname, "assets", "icon.png"));
+  const tray = new Tray(resolve("assets", "icon.png"));
 
   const horaIcon = nativeImage.createFromPath(
-    resolve(__dirname, "assets", "hora.png")
+    resolve("assets", "hora.png")
   );
 
   const definicoesIcon = nativeImage.createFromPath(
-    resolve(__dirname, "assets", "definicoes.png")
+    resolve("assets", "definicoes.png")
   );
 
   const sairIcon = nativeImage.createFromPath(
-    resolve(__dirname, "assets", "fechadas.png")
+    resolve("assets", "fechadas.png")
   );
 
   function estaLogado(cookie) {
@@ -97,7 +97,7 @@ app.whenReady().then(() => {
     mainWindow.setMenu(null);
     mainWindow.setResizable(false);
 
-    mainWindow.loadURL('file://' + resolve(__dirname, "config.html"));
+    mainWindow.loadURL('file://' + resolve(__dirname, "pages", "config.html"));
 
     setTimeout(() => {
       const login = store.get('login');
@@ -167,6 +167,7 @@ app.whenReady().then(() => {
       label: 'Sair',
       icon: sairIcon.resize({ width: 16, height: 16 }),
       click: () => {
+        tray.destroy();
         app.quit();
       }
     }
