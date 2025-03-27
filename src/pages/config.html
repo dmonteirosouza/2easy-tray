@@ -9,13 +9,13 @@
 <body>
 <div class="container">
 <div class="row gutters">
-	<div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
+	<div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
 		<div class="card h-100">
 			<div class="card-body">
         <form>
           <div class="row gutters">
             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-              <h6 class="mb-3">Configurações</h6>
+              <h6 class="mb-3">Configurações de Login</h6>
             </div>
             <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
               <div class="form-group">
@@ -29,12 +29,56 @@
                 <input type="password" class="form-control" id="senha" name="senha" placeholder="Informe a senha" value="">
               </div>
             </div>
-            
           </div>
-          <div class="row gutters">
+          
+          <div class="row gutters mt-4">
+            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+              <h6 class="mb-3">Configurações de Captcha</h6>
+            </div>
+            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+              <div class="form-group">
+                <label for="url_page_captcha">URL da página do captcha</label>
+                <input type="text" class="form-control" id="url_page_captcha" name="url_page_captcha" placeholder="URL da página que contém o captcha" value="">
+              </div>
+            </div>
+            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+              <div class="form-group">
+                <label for="data_site_key">Chave do site (data-site-key)</label>
+                <input type="text" class="form-control" id="data_site_key" name="data_site_key" placeholder="Informe a chave do site" value="">
+                <small class="form-text text-muted">Encontrado no atributo data-sitekey do elemento do captcha</small>
+              </div>
+            </div>
+            <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+              <div class="form-group">
+                <label for="version">Versão do reCAPTCHA</label>
+                <select class="form-control" id="version" name="version">
+                  <option value="v2">v2</option>
+                  <option value="v3">v3</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          
+          <div class="row gutters mt-4">
+            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+              <div class="alert alert-info" role="alert">
+                <h6 class="alert-heading">Como obter a chave do site?</h6>
+                <p>Para encontrar a chave do site (data-site-key), siga estes passos:</p>
+                <ol>
+                  <li>Acesse a página de login do 2easy</li>
+                  <li>Clique com o botão direito no elemento do captcha e selecione "Inspecionar"</li>
+                  <li>Procure pelo atributo "data-sitekey" no elemento do captcha</li>
+                  <li>Copie o valor deste atributo e cole no campo acima</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+          
+          <div class="row gutters mt-4">
             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
               <div class="text-right">
-                <button type="submit" class="btn btn-secondary">Atualizar</button>
+                <button type="button" id="btn-cancelar" class="btn btn-secondary mr-2">Cancelar</button>
+                <button type="submit" class="btn btn-primary">Salvar Configurações</button>
               </div>
             </div>
           </div>
@@ -88,11 +132,22 @@ body {
     event.preventDefault();
     
     let data = {
-      cpf: document.querySelector('#cpf').value,
-      senha: document.querySelector('#senha').value
+      login: {
+        cpf: document.querySelector('#cpf').value,
+        senha: document.querySelector('#senha').value
+      },
+      captcha: {
+        url_page_captcha: document.querySelector('#url_page_captcha').value,
+        data_site_key: document.querySelector('#data_site_key').value,
+        version: document.querySelector('#version').value
+      }
     };
 
     ipcRenderer.send('submit:config', data);
+  });
+  
+  document.querySelector('#btn-cancelar').addEventListener('click', function() {
+    window.close();
   });
 
   ipcRenderer.on('submit:config:success', function (event, data) {
@@ -101,8 +156,14 @@ body {
 
   setTimeout(() => {
     ipcRenderer.on('config:store', function (event, data) {
-      document.querySelector('#cpf').value = data.cpf;
-      document.querySelector('#senha').value = data.senha;
+      // Preenche dados de login
+      document.querySelector('#cpf').value = data.login.cpf;
+      document.querySelector('#senha').value = data.login.senha;
+      
+      // Preenche dados de captcha
+      document.querySelector('#url_page_captcha').value = data.captcha.url_page_captcha;
+      document.querySelector('#data_site_key').value = data.captcha.data_site_key;
+      document.querySelector('#version').value = data.captcha.version;
     });
   }, 1000);
 </script>
